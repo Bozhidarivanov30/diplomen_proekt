@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* src/app/globals.css */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f7fafc; /* Light gray background */
+  }
+  
+  h1, h2, h3 {
+    font-family: 'Roboto', sans-serif;
+    color: #2d3748; /* Dark gray for headings */
+  }
+  
+  p {
+    color: #4a5568; /* Lighter gray for paragraphs */
+  }
+  
