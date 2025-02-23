@@ -1,4 +1,6 @@
 import React from "react";
+import Image from "next/image";
+import PropTypes from "prop-types"; // Optional: For prop validation
 
 export default function ItemList({ items, handleAddToCart }) {
   return (
@@ -8,9 +10,12 @@ export default function ItemList({ items, handleAddToCart }) {
           key={item.id}
           className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
         >
-          <img
+          {/* Replace <img> with <Image /> */}
+          <Image
             src={item.image}
             alt={item.name}
+            width={300}
+            height={160}
             className="w-full h-40 object-cover"
           />
           <div className="p-4">
@@ -28,3 +33,16 @@ export default function ItemList({ items, handleAddToCart }) {
     </div>
   );
 }
+
+// Optional: Add PropTypes for better code maintainability
+ItemList.propTypes = {
+  items: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+      name: PropTypes.string.isRequired,
+      price: PropTypes.number.isRequired,
+      image: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  handleAddToCart: PropTypes.func.isRequired,
+};

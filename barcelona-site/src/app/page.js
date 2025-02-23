@@ -1,7 +1,6 @@
 "use client"; // Add this directive to use client-side features like useState
 
 import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { UpcomingMatches } from "./components/upcoming-matches";
 import { LatestNews } from "./components/latest-news";
@@ -28,7 +27,7 @@ export default function Home() {
             {/* Conditionally render the button */}
             {!hasRegistered && (
               <Link
-                href="./Register"
+                href="/Register" // Use an absolute path for better reliability
                 onClick={handleRegister} // Call handleRegister when the button is clicked
                 className="bg-white text-[#A50044] px-6 py-2 rounded-full font-bold hover:bg-opacity-90 transition-colors"
               >

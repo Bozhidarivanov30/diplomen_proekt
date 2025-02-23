@@ -2,6 +2,7 @@
 
 import { useUser } from "../context/UserContext";
 import { removeFromCart } from "../firebase";
+import Image from "next/image";
 
 export default function CartPage() {
   const { user, cart, setCart } = useUser();
@@ -30,7 +31,14 @@ export default function CartPage() {
           {cart.map((item, index) => (
             <div key={index} className="border p-4 rounded shadow">
               <h2 className="text-lg font-bold">{item.name}</h2>
-              <img src={item.imgSrc} alt={item.name} className="w-full h-auto mb-4" />
+              {/* Replace <img> with <Image /> */}
+              <Image
+                src={item.imgSrc}
+                alt={item.name}
+                width={200}
+                height={200}
+                className="w-full h-auto mb-4"
+              />
               <p>${item.price}</p>
               <button
                 onClick={() => handleRemoveFromCart(item)}
