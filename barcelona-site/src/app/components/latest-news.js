@@ -1,24 +1,38 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 
 export function LatestNews() {
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const apiKey = "1a9affa9363541a89be79336c12a99f5"; // Replace with your NewsAPI key
-        const query = "FC Barcelona";
-        const url = `https://newsapi.org/v2/everything?q=${query}&apiKey=${apiKey}`;
+        // Use the proxy server URL for news
+        const url = "http://localhost:3001/api/news";
+
+        console.log("Fetching news from:", url);
 
         const response = await fetch(url);
+        console.log("Response status:", response.status);
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch news: ${response.statusText}`);
+        }
+
         const data = await response.json();
-        setNews(data.articles.slice(0, 3)); // Show only the first 3 articles
+        console.log("Response data:", data);
+
+        if (data.articles && data.articles.length > 0) {
+          setNews(data.articles.slice(0, 3)); // Show only the first 3 articles
+        } else {
+          setError("No news articles found.");
+        }
       } catch (error) {
         console.error("Failed to fetch news:", error);
+        setError(error.message);
       } finally {
         setLoading(false);
       }
@@ -29,6 +43,10 @@ export function LatestNews() {
 
   if (loading) {
     return <p>Loading news...</p>;
+  }
+
+  if (error) {
+    return <p className="text-red-500">{error}</p>;
   }
 
   return (
@@ -55,9 +73,6 @@ export function LatestNews() {
           <p>No news found.</p>
         )}
       </ul>
-      <Link href="/news" className="mt-4 inline-block text-[#004D98] hover:underline">
-        View all news
-      </Link>
     </div>
   );
 }

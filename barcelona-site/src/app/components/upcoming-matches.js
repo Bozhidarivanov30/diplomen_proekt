@@ -11,18 +11,12 @@ export function UpcomingMatches() {
   useEffect(() => {
     const fetchMatches = async () => {
       try {
-        const apiKey = "ccd1ed853c494c27813971cc236d4022"; // Your API key
-        const teamId = 81; // FC Barcelona's team ID
-        const url = `https://api.football-data.org/v4/teams/${teamId}/matches`;
+        // Use the proxy server URL for matches
+        const url = "http://localhost:3001/api/matches";
 
         console.log("Fetching matches from:", url);
 
-        const response = await fetch(url, {
-          headers: {
-            "X-Auth-Token": apiKey,
-          },
-        });
-
+        const response = await fetch(url);
         console.log("Response status:", response.status);
 
         if (!response.ok) {
