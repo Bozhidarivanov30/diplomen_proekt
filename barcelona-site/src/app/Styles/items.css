@@ -1,0 +1,36 @@
+.items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+  }
+  .item {
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 150px;
+  }
+  .item img {
+    width: 100px;
+    height: 100px;
+  }
+  .item-name,
+  .item-price {
+    margin: 5px 0;
+  }
+  .add-to-cart {
+    background-color: blue;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  

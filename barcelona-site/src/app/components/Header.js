@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useUser } from "../context/UserContext";
 
 export default function Header() {
-  const { user, loginUser, logoutUser } = useUser();
+  const { user, logoutUser } = useUser();
 
   const handleLogout = async () => {
     try {
@@ -17,7 +17,13 @@ export default function Header() {
   return (
     <header className="bg-blue-900 flex items-center justify-between px-6 py-4">
       <div className="flex items-center space-x-4">
-        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/47/FC_Barcelona_%28crest%29.svg/1200px-FC_Barcelona_%28crest%29.svg.png" alt="Barcelona Logo" className="h-10" />
+        <Link href="/">
+          <img
+            src="https://upload.wikimedia.org/wikipedia/en/thumb/4/47/FC_Barcelona_%28crest%29.svg/1200px-FC_Barcelona_%28crest%29.svg.png"
+            alt="Barcelona Logo"
+            className="h-10 cursor-pointer"
+          />
+        </Link>
         <nav className="text-white text-sm">
           <Link href="/shop" className="px-3 py-2 hover:underline">Shop</Link>
           <Link href="/fixtures" className="px-3 py-2 hover:underline">Fixtures</Link>
@@ -54,4 +60,3 @@ export default function Header() {
     </header>
   );
 }
-
