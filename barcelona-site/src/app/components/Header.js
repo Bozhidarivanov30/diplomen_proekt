@@ -32,7 +32,7 @@ export default function Header() {
           <Link href="/shop" className="px-3 py-2 hover:underline">
             Shop
           </Link>
-          <Link href="/fixtures" className="px-3 py-2 hover:underline">
+          <Link href="/Fixtures" className="px-3 py-2 hover:underline">
             Fixtures
           </Link>
           <Link href="/team" className="px-3 py-2 hover:underline">
