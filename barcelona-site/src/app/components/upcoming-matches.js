@@ -12,7 +12,7 @@ export function UpcomingMatches() {
     const fetchMatches = async () => {
       try {
         // Use the proxy server URL for matches
-        const url = "http://localhost:3001/api/matches";
+        const url = "https://diplomen-proekt.app/api/proxy?endpoint=matches";
 
         console.log("Fetching matches from:", url);
 

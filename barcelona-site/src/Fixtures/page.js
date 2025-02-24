@@ -11,7 +11,7 @@ export default function Fixtures() {
     const fetchData = async () => {
       try {
         // Fetch rankings
-        const rankingsResponse = await fetch("http://localhost:3001/api/rankings");
+        const rankingsResponse = await fetch("https://diplomen-proekt.vercel.app/api/proxy?endpoint=rankings");
         if (!rankingsResponse.ok) {
           throw new Error("Failed to fetch rankings");
         }
@@ -19,7 +19,7 @@ export default function Fixtures() {
         setRankings(rankingsData);
 
         // Fetch matches
-        const matchesResponse = await fetch("http://localhost:3001/api/matches");
+        const matchesResponse = await fetch("https://your-vercel-app.vercel.app/api/proxy?endpoint=matches");
         if (!matchesResponse.ok) {
           throw new Error("Failed to fetch matches");
         }

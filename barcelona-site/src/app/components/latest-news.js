@@ -11,7 +11,7 @@ export function LatestNews() {
     const fetchNews = async () => {
       try {
         // Use the proxy server URL for news
-        const url = "http://localhost:3001/api/news";
+        const url = "https://diplomen-proekt.vercel.app/api/proxy?endpoint=news";
 
         console.log("Fetching news from:", url);
 
