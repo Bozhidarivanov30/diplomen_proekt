@@ -22,10 +22,10 @@ export default function Header() {
           {/* Replace <img> with <Image /> */}
           <Image
             src="https://upload.wikimedia.org/wikipedia/en/thumb/4/47/FC_Barcelona_%28crest%29.svg/1200px-FC_Barcelona_%28crest%29.svg.png"
-            alt="Barcelona Logo"
-            width={40}
-            height={40}
-            className="cursor-pointer"
+            alt="FC Barcelona Crest"
+            width={60} // Set the width
+            height={60} // Set the height
+            style={{ width: "auto", height: "auto" }} // Maintain aspect ratio
           />
         </Link>
         <nav className="text-white text-sm">
