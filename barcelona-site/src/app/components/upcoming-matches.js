@@ -1,4 +1,4 @@
-"use client";
+"use client"; // Ensure this is at the very top
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -11,8 +11,7 @@ export function UpcomingMatches() {
   useEffect(() => {
     const fetchMatches = async () => {
       try {
-        // Use the proxy server URL for matches
-        const url = "https://diplomen-proekt.vercel.app/api/proxy?endpoint=matches";
+        const url = "/api/matches"; // Use your Next.js API instead of external API
 
         console.log("Fetching matches from:", url);
 
@@ -20,27 +19,19 @@ export function UpcomingMatches() {
         console.log("Response status:", response.status);
 
         if (!response.ok) {
-          // Handle HTTP errors
-          if (response.status === 403) {
-            throw new Error("Invalid API key. Please check your API key.");
-          } else if (response.status === 429) {
-            throw new Error("API rate limit exceeded. Please try again later.");
-          } else {
-            throw new Error(`Failed to fetch matches: ${response.statusText}`);
-          }
+          throw new Error(`Failed to fetch matches: ${response.statusText}`);
         }
 
         const data = await response.json();
         console.log("Response data:", data);
 
-        // Filter for scheduled matches
         const scheduledMatches = data.matches.filter(
           (match) => match.status === "SCHEDULED"
         );
-        setMatches(scheduledMatches.slice(0, 3)); // Show only the first 3 matches
+        setMatches(scheduledMatches.slice(0, 3));
       } catch (error) {
         console.error("Failed to fetch matches:", error);
-        setError(error.message); // Display the error message to the user
+        setError(error.message);
       } finally {
         setLoading(false);
       }

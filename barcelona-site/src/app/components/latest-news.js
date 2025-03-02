@@ -10,8 +10,7 @@ export function LatestNews() {
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        // Use the proxy server URL for news
-        const url = "https://diplomen-proekt.vercel.app/api/proxy?endpoint=news";
+        const url = "/api/news"; // Fetch from your Next.js API route
 
         console.log("Fetching news from:", url);
 

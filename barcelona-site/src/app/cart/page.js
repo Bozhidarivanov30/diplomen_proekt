@@ -29,14 +29,14 @@ export default function CartPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
           {cart.map((item, index) => (
-            <div key={index} className="border p-4 rounded shadow">
+            <div key={index} className="border p-2 rounded shadow">
               <h2 className="text-lg font-bold">{item.name}</h2>
-              {/* Replace <img> with <Image /> */}
+              {/* Image with updated size */}
               <Image
                 src={item.imgSrc}
                 alt={item.name}
-                width={200}
-                height={200}
+                width={80}  // Reduced size to match shop
+                height={80} // Reduced size to match shop
                 className="w-full h-auto mb-4"
               />
               <p>${item.price}</p>
@@ -50,6 +50,16 @@ export default function CartPage() {
           ))}
         </div>
       )}
+
+      {/* Add the "Go to Checkout" Button */}
+      <div className="mt-6">
+        <button
+          onClick={() => alert("Redirecting to Stripe Checkout...")}
+          className="px-6 py-3 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition-colors"
+        >
+          Go to Checkout
+        </button>
+      </div>
     </div>
   );
 }
