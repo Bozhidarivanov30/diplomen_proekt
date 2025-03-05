@@ -69,7 +69,7 @@ export function UpcomingMatches() {
           <p>No upcoming matches found.</p>
         )}
       </ul>
-      <Link href="/matches" className="mt-4 inline-block text-[#004D98] hover:underline">
+      <Link href="/standings" className="mt-4 inline-block text-[#004D98] hover:underline">
         View all matches
       </Link>
     </div>

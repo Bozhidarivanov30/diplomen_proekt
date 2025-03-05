@@ -2,11 +2,11 @@
 
 import { createContext, useContext, useState, useEffect } from "react";
 import { auth } from "../firebase";
-import { 
-  createUserWithEmailAndPassword, 
-  signInWithEmailAndPassword, 
-  signOut, 
-  onAuthStateChanged 
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
 } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
@@ -15,10 +15,11 @@ import { db } from "../firebase";
 const UserContext = createContext();
 
 export function UserContextProvider({ children }) {
-  const [user, setUser] = useState(null); // Track user state
-  const [cart, setCart] = useState([]);  // Track cart items in state
+  const [user, setUser] = useState(null); // Track user state (full user object)
+  const [cart, setCart] = useState([]); // Track cart items in state
   const router = useRouter();
 
+  // Listen for authentication state changes
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
@@ -27,21 +28,22 @@ export function UserContextProvider({ children }) {
         const cartSnapshot = await getDoc(userCartRef);
 
         if (cartSnapshot.exists()) {
-          setCart(cartSnapshot.data().items || []);
+          setCart(cartSnapshot.data().items || []); // Set cart from Firestore
         } else {
-          setCart([]);
+          setCart([]); // Initialize empty cart if no document exists
         }
 
-        setUser(currentUser.email);
+        setUser(currentUser); // Set the full user object
       } else {
-        setUser(null);
-        setCart([]);
+        setUser(null); // Clear user state if logged out
+        setCart([]); // Clear cart state
       }
     });
 
-    return () => unsubscribe();
+    return () => unsubscribe(); // Cleanup on unmount
   }, []);
 
+  // Login user
   const loginUser = async (email, password) => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -51,43 +53,45 @@ export function UserContextProvider({ children }) {
       const cartSnapshot = await getDoc(userCartRef);
 
       if (cartSnapshot.exists()) {
-        setCart(cartSnapshot.data().items || []);
+        setCart(cartSnapshot.data().items || []); // Set cart from Firestore
       } else {
-        setCart([]);
+        setCart([]); // Initialize empty cart if no document exists
       }
 
-      setUser(userCredential.user.email);
+      setUser(userCredential.user); // Set the full user object
       alert("Login successful!");
-      router.push("/");
+      router.push("/"); // Redirect to home page
     } catch (error) {
       console.error("Login failed:", error.message);
       alert(`Login failed: ${error.message}`);
     }
   };
 
+  // Register user
   const registerUser = async (email, password) => {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const userId = userCredential.user.uid;
 
       const userCartRef = doc(db, "carts", userId);
-      await setDoc(userCartRef, { items: [] });
+      await setDoc(userCartRef, { items: [] }); // Initialize empty cart
 
-      setUser(userCredential.user.email);
-      setCart([]);
+      setUser(userCredential.user); // Set the full user object
+      setCart([]); // Initialize empty cart state
       alert("Registration successful and cart initialized!");
-      router.push("/");
+      router.push("/"); // Redirect to home page
     } catch (error) {
       console.error("Registration failed:", error.message);
       alert(`Registration failed: ${error.message}`);
     }
   };
 
+  // Logout user
   const logoutUser = async () => {
     try {
       await signOut(auth);
-      setUser(null);
-      setCart([]);
+      setUser(null); // Clear user state
+      setCart([]); // Clear cart state
       alert("Logged out successfully!");
     } catch (error) {
       console.error("Logout failed:", error.message);
@@ -95,6 +99,7 @@ export function UserContextProvider({ children }) {
     }
   };
 
+  // Add item to cart
   const addToCart = async (item) => {
     if (!user) {
       alert("Please log in to add items to your cart.");
@@ -102,20 +107,24 @@ export function UserContextProvider({ children }) {
     }
 
     try {
-      const userId = auth.currentUser.uid;
+      const userId = user.uid; // Use user.uid from the state
       const userCartRef = doc(db, "carts", userId);
 
       console.log("Adding item to Firestore:", item);
 
+      // Check if the cart document exists
       const cartDoc = await getDoc(userCartRef);
       if (!cartDoc.exists()) {
+        // Create a new cart document if it doesn't exist
         await setDoc(userCartRef, { items: [] });
       }
 
+      // Add the item to the cart
       await updateDoc(userCartRef, {
         items: arrayUnion(item),
       });
 
+      // Update the local cart state
       setCart((prevCart) => [...prevCart, item]);
       alert("Item added to cart!");
       console.log("Item added to cart successfully:", item);
@@ -125,6 +134,7 @@ export function UserContextProvider({ children }) {
     }
   };
 
+  // Remove item from cart
   const removeFromCart = async (item) => {
     if (!user) {
       alert("Please log in to remove items from your cart.");
@@ -132,13 +142,15 @@ export function UserContextProvider({ children }) {
     }
 
     try {
-      const userId = auth.currentUser.uid;
+      const userId = user.uid; // Use user.uid from the state
       const userCartRef = doc(db, "carts", userId);
 
+      // Remove the item from the cart
       await updateDoc(userCartRef, {
         items: arrayRemove(item),
       });
 
+      // Update the local cart state
       setCart((prevCart) => prevCart.filter((cartItem) => cartItem.id !== item.id));
       alert("Item removed from cart!");
     } catch (error) {
@@ -147,17 +159,18 @@ export function UserContextProvider({ children }) {
     }
   };
 
+  // Provide context values
   return (
-    <UserContext.Provider 
-      value={{ 
-        user, 
-        cart, 
-        setCart, 
-        loginUser, 
-        registerUser, 
-        logoutUser, 
-        addToCart, 
-        removeFromCart 
+    <UserContext.Provider
+      value={{
+        user,
+        cart,
+        setCart,
+        loginUser,
+        registerUser,
+        logoutUser,
+        addToCart,
+        removeFromCart,
       }}
     >
       {children}
@@ -165,6 +178,7 @@ export function UserContextProvider({ children }) {
   );
 }
 
+// Custom hook to use the UserContext
 export function useUser() {
   return useContext(UserContext);
 }

@@ -2,55 +2,59 @@
 
 import { useState, useEffect } from "react";
 import { useUser } from "../context/UserContext";
-import { addToCart, getCart } from "../firebase";
+import { addToCart, getCart, getProducts } from "../firebase";
 import Image from "next/image";
 
 export default function ShopPage() {
   const { user, setCart } = useUser();
-  const [shopItems] = useState([
-    {
-      id: 1,
-      name: "Barcelona Jersey",
-      price: 80,
-      imgSrc: "https://store.fcbarcelona.com/cdn/shop/files/imagen_3.jpg?v=1730388363&width=1946",
-    },
-    {
-      id: 2,
-      name: "Scarf",
-      price: 20,
-      imgSrc: "https://thumblr.uniid.it/product/92600/83227f8f0841.jpg?width=3840&format=webp&q=75",
-    },
-    {
-      id: 3,
-      name: "Ball",
-      price: 25,
-      imgSrc: "https://static.nike.com/a/images/t_PDP_936_v1/f_auto,q_auto:eco/6525c408-fe40-4a0b-8158-d66c27990a4e/FCB+NK+STRK.png",
-    },
-  ]);
+  const [shopItems, setShopItems] = useState([]); // State to store products from Firebase
+  const [loading, setLoading] = useState(true); // State to handle loading state
 
+  // Fetch products from Firebase on component mount
+  useEffect(() => {
+    async function fetchProducts() {
+      try {
+        const products = await getProducts();
+        setShopItems(products);
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchProducts();
+  }, []);
+
+  // Fetch user's cart on user change
   useEffect(() => {
     async function fetchCart() {
-      if (user) {
-        const userCart = await getCart(user);
+      if (user?.uid) { // Check if user.uid is defined
+        const userCart = await getCart(user.uid);
         setCart(userCart);
       }
     }
     fetchCart();
   }, [user, setCart]);
 
+  // Handle adding items to cart
   const handleAddToCart = async (item) => {
-    if (!user) {
+    if (!user?.uid) { // Check if user.uid is defined
       alert("You need to be logged in to add items to your cart.");
       return;
     }
     try {
-      await addToCart(user, item);
+      await addToCart(user.uid, item);
       setCart((prev) => [...prev, item]);
       alert(`${item.name} added to your cart!`);
     } catch (error) {
       console.error("Failed to add to cart:", error.message);
     }
   };
+
+  // Display loading state while fetching products
+  if (loading) {
+    return <div className="min-h-screen bg-maroon p-6 text-white">Loading...</div>;
+  }
 
   return (
     <div className="min-h-screen bg-maroon p-6 relative">
@@ -63,9 +67,8 @@ export default function ShopPage() {
         {shopItems.map((item) => (
           <div key={item.id} className="bg-white p-4 rounded-lg shadow-lg text-center">
             <h2 className="text-lg font-bold mb-2">{item.name}</h2>
-            {/* Replace <img> with <Image /> */}
             <Image
-              src={item.imgSrc}
+              src={item.imgScr}
               alt={item.name}
               width={200}
               height={200}

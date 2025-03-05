@@ -8,6 +8,8 @@ import {
   updateDoc,
   arrayUnion,
   arrayRemove,
+  collection,
+  getDocs,
 } from "firebase/firestore";
 
 // Firebase configuration
@@ -27,6 +29,11 @@ export const db = getFirestore(app);
 
 // Remove an item from the cart in Firestore
 export async function removeFromCart(userId, item) {
+  if (!userId) {
+    console.error("User ID is undefined.");
+    return;
+  }
+
   const userCartRef = doc(db, "carts", userId);
   await updateDoc(userCartRef, {
     items: arrayRemove(item),
@@ -35,6 +42,11 @@ export async function removeFromCart(userId, item) {
 
 // Get the cart for the user
 export async function getCart(userId) {
+  if (!userId) {
+    console.error("User ID is undefined.");
+    return [];
+  }
+
   const userCartRef = doc(db, "carts", userId);
   const cartDoc = await getDoc(userCartRef);
   return cartDoc.exists() ? cartDoc.data().items : [];
@@ -42,9 +54,14 @@ export async function getCart(userId) {
 
 // Add an item to the cart in Firestore
 export async function addToCart(userId, item) {
+  if (!userId) {
+    console.error("User ID is undefined.");
+    return;
+  }
+
   try {
     const cartRef = doc(db, "carts", userId);
-    
+
     // Check if the document exists
     const cartDoc = await getDoc(cartRef);
     if (!cartDoc.exists()) {
@@ -59,4 +76,15 @@ export async function addToCart(userId, item) {
     console.error("Error adding to cart:", error.message);
     throw error;
   }
+}
+
+// Fetch all products from the "products" collection
+export async function getProducts() {
+  const productsCollection = collection(db, "products");
+  const productsSnapshot = await getDocs(productsCollection);
+  const products = productsSnapshot.docs.map((doc) => ({
+    id: doc.id, // Include the document ID
+    ...doc.data(), // Include all fields from the document
+  }));
+  return products;
 }

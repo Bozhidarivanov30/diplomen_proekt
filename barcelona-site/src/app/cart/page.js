@@ -7,14 +7,17 @@ import Image from "next/image";
 export default function CartPage() {
   const { user, cart, setCart } = useUser();
 
+  // Calculate the total price of items in the cart
+  const totalPrice = cart.reduce((total, item) => total + item.price, 0);
+
   const handleRemoveFromCart = async (item) => {
-    if (!user) {
+    if (!user?.uid) { // Check if user.uid is defined
       alert("You need to be logged in to remove items from your cart.");
       return;
     }
     try {
-      await removeFromCart(user, item);
-      setCart((prev) => prev.filter((cartItem) => cartItem.id !== item.id));
+      await removeFromCart(user.uid, item); // Pass user.uid instead of user
+      setCart((prev) => prev.filter((cartItem) => cartItem.id !== item.id)); // Update local cart state
       alert(`${item.name} removed from your cart!`);
     } catch (error) {
       console.error("Failed to remove from cart:", error.message);
@@ -33,9 +36,9 @@ export default function CartPage() {
               <h2 className="text-lg font-bold">{item.name}</h2>
               {/* Image with updated size */}
               <Image
-                src={item.imgSrc}
+                src={item.imgScr}
                 alt={item.name}
-                width={80}  // Reduced size to match shop
+                width={80} // Reduced size to match shop
                 height={80} // Reduced size to match shop
                 className="w-full h-auto mb-4"
               />
@@ -51,8 +54,9 @@ export default function CartPage() {
         </div>
       )}
 
-      {/* Add the "Go to Checkout" Button */}
+      {/* Display Total Price and Checkout Button */}
       <div className="mt-6">
+        <p className="text-xl font-bold">Total: ${totalPrice.toFixed(2)}</p>
         <button
           onClick={() => alert("Redirecting to Stripe Checkout...")}
           className="px-6 py-3 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition-colors"

@@ -3,13 +3,16 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useUser } from "../context/UserContext";
+import { useState } from "react";
 
 export default function Header() {
   const { user, logoutUser } = useUser();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State to manage dropdown visibility
 
   const handleLogout = async () => {
     try {
       await logoutUser();
+      setIsDropdownOpen(false); // Close dropdown after logout
     } catch (error) {
       console.error("Logout failed:", error.message);
     }
@@ -33,18 +36,19 @@ export default function Header() {
             Shop
           </Link>
           <Link href="/Standings" className="px-3 py-2 hover:underline">
-            standings
-          </Link>
-          <Link href="/team" className="px-3 py-2 hover:underline">
-            Team
+            Standings
           </Link>
         </nav>
       </div>
       <div className="space-x-4">
         {user ? (
-          <div className="relative group">
-            <button className="flex items-center space-x-2 px-4 py-2 bg-white text-blue-900 rounded-md">
-              <span>{user}</span>
+          <div className="relative">
+            {/* User button to toggle dropdown */}
+            <button
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)} // Toggle dropdown on click
+              className="flex items-center space-x-2 px-4 py-2 bg-white text-blue-900 rounded-md"
+            >
+              <span>{user.email}</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5"
@@ -58,19 +62,35 @@ export default function Header() {
                 />
               </svg>
             </button>
-            <div className="absolute right-0 mt-2 w-48 bg-white text-black rounded shadow-lg hidden group-hover:block">
-              <button
-                onClick={handleLogout}
-                className="w-full text-left px-4 py-2 hover:bg-gray-100"
-              >
-                Log Out
-              </button>
-              <Link href="/cart">
-                <button className="px-4 py-2 hover:bg-gray-100 w-full text-left">
-                  View Cart
-                </button>
-              </Link>
-            </div>
+
+            {/* Dropdown menu */}
+            {isDropdownOpen && (
+              <>
+                {/* Backdrop */}
+                <div
+                  className="fixed inset-0 bg-black bg-opacity-50 z-40"
+                  onClick={() => setIsDropdownOpen(false)} // Close dropdown when clicking outside
+                ></div>
+
+                {/* Dropdown menu */}
+                <div className="absolute right-0 mt-2 w-48 bg-white text-black rounded shadow-lg z-50">
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left px-4 py-2 hover:bg-gray-100"
+                  >
+                    Log Out
+                  </button>
+                  <Link href="/cart">
+                    <button
+                      onClick={() => setIsDropdownOpen(false)} // Close dropdown when navigating
+                      className="px-4 py-2 hover:bg-gray-100 w-full text-left"
+                    >
+                      View Cart
+                    </button>
+                  </Link>
+                </div>
+              </>
+            )}
           </div>
         ) : (
           <div className="flex space-x-4">
