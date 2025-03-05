@@ -111,7 +111,7 @@ export default function StandingsPage() {
 
         {/* Barcelona Matches (Right Side) */}
         <div className="flex-1 bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-xl font-bold mb-4">Barcelona's Next Matches</h2>
+          <h2 className="text-xl font-bold mb-4">Barcelona&apos;s Next Matches</h2>
           <div className="flex items-center justify-center mb-4">
             <Image
               src="https://upload.wikimedia.org/wikipedia/en/thumb/4/47/FC_Barcelona_%28crest%29.svg/1200px-FC_Barcelona_%28crest%29.svg.png"
