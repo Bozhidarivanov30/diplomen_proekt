@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword} from "firebase/auth";
+
 import {
   getFirestore,
   doc,
@@ -77,6 +78,28 @@ export async function addToCart(userId, item) {
     throw error;
   }
 }
+
+// Add a new product
+export const addProduct = async (product) => {
+  const docRef = await addDoc(collection(db, "products"), product);
+  return docRef.id;
+};
+// Delete a product
+export const deleteProduct = async (productId) => {
+  await deleteDoc(doc(db, "products", productId)); // Use deleteDoc to remove a product
+};
+
+
+// Admin login
+export const adminLogin = async (email, password) => {
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    return userCredential.user;
+  } catch (error) {
+    console.error("Admin login error:", error.message);
+    throw error;
+  }
+};
 
 // Fetch all products from the "products" collection
 export async function getProducts() {

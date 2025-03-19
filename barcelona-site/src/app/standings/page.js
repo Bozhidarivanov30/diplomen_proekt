@@ -35,12 +35,24 @@ export default function StandingsPage() {
   useEffect(() => {
     const fetchMatches = async () => {
       try {
-        const response = await fetch("/api/matches"); // Use local API route
+        const url = "/api/matches"; // Use your Next.js API instead of external API
+
+        console.log("Fetching matches from:", url);
+
+        const response = await fetch(url);
+        console.log("Response status:", response.status);
+
         if (!response.ok) {
           throw new Error(`Failed to fetch matches: ${response.statusText}`);
         }
+
         const data = await response.json();
-        setMatches(data.matches); // Extract the matches data
+        console.log("Response data:", data);
+
+        const scheduledMatches = data.matches.filter(
+          (match) => match.status === "SCHEDULED"
+        );
+        setMatches(scheduledMatches); // Extract the matches data
       } catch (error) {
         console.error("Failed to fetch matches:", error);
         setError(error.message);

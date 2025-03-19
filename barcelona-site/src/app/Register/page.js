@@ -9,10 +9,15 @@ export default function RegisterPage() {
   const { registerUser } = useUser();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(null); // Add error state
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    await registerUser(email, password);
+    try {
+      await registerUser(email, password);
+    } catch (error) {
+      setError(error.message); // Set error message if registration fails
+    }
   };
 
   return (
@@ -27,6 +32,7 @@ export default function RegisterPage() {
           className="mx-auto mb-4"
         />
         <h2 className="text-2xl font-bold text-black mb-6">Register</h2>
+        {error && <p className="text-red-500 mb-4">{error}</p>} {/* Display error message */}
         <form onSubmit={handleRegister}>
           <div className="mb-4">
             <label htmlFor="email" className="block text-sm font-bold mb-2">
@@ -39,6 +45,7 @@ export default function RegisterPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter email"
+              required
             />
           </div>
           <div className="mb-6">
@@ -52,6 +59,7 @@ export default function RegisterPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter password"
+              required
             />
           </div>
           <button

@@ -1,3 +1,4 @@
+// UserContext.js
 "use client";
 
 import { createContext, useContext, useState, useEffect } from "react";
@@ -46,6 +47,15 @@ export function UserContextProvider({ children }) {
   // Login user
   const loginUser = async (email, password) => {
     try {
+      // Check if the email and password match the admin credentials
+      if (email === "admin1@gmail.com" && password === "admin123") {
+        // Mark the user as an admin
+        setUser({ email, isAdmin: true });
+        router.push("/admin"); // Redirect to the admin page
+        return;
+      }
+
+      // Proceed with regular user login
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const userId = userCredential.user.uid;
 

@@ -4,21 +4,36 @@ import { useState } from "react";
 import { useUser } from "../context/UserContext";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const { loginUser } = useUser();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const router = useRouter();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    await loginUser(email, password);
+
+    // Check if the email and password match the admin credentials
+    if (email === "admin1@gmail.com" && password === "admin123") {
+      // Redirect to the admin page
+      router.push("/admin");
+      return;
+    }
+
+    // Proceed with regular user login
+    try {
+      await loginUser(email, password);
+      router.push("/"); // Redirect to the home page after successful login
+    } catch (error) {
+      alert("Login failed. Please check your email and password.");
+    }
   };
 
   return (
     <div className="min-h-screen flex justify-center items-center bg-gradient-to-r from-maroon to-yellow">
       <div className="border-4 border-red-500 text-center p-8 bg-white rounded-lg shadow-lg w-full max-w-md">
-        {/* Replace <img> with <Image /> */}
         <Image
           src="https://upload.wikimedia.org/wikipedia/en/thumb/4/47/FC_Barcelona_%28crest%29.svg/1200px-FC_Barcelona_%28crest%29.svg.png"
           alt="Barcelona Logo"
