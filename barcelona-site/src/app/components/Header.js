@@ -96,12 +96,12 @@ export default function Header() {
           <div className="flex space-x-4">
             <Link href="/Login">
               <button className="px-4 py-2 bg-white text-blue-900 rounded-md hover:bg-gray-200">
-                Log In
+                Вход
               </button>
             </Link>
             <Link href="/Register">
               <button className="px-4 py-2 bg-white text-blue-900 rounded-md hover:bg-gray-200">
-                Register
+                Регистрация
               </button>
             </Link>
           </div>

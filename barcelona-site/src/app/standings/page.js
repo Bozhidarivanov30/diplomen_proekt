@@ -88,7 +88,7 @@ export default function StandingsPage() {
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
-      <h1 className="text-2xl font-bold text-center mb-6">Ла лига класиране и предишни мачове на Барселона</h1>
+      <h1 className="text-2xl font-bold text-center mb-6">Ла лига класиране и следващите мачове на Барселона</h1>
       <div className="flex flex-col md:flex-row gap-6">
         {/* Standings Table (Left Side) */}
         <div className="flex-1 bg-white p-6 rounded-lg shadow-md">

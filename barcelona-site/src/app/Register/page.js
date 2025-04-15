@@ -36,7 +36,7 @@ export default function RegisterPage() {
         <form onSubmit={handleRegister}>
           <div className="mb-4">
             <label htmlFor="email" className="block text-sm font-bold mb-2">
-              Email
+              Имейл
             </label>
             <input
               type="email"
@@ -50,7 +50,7 @@ export default function RegisterPage() {
           </div>
           <div className="mb-6">
             <label htmlFor="password" className="block text-sm font-bold mb-2">
-              Password
+              Парола
             </label>
             <input
               type="password"
@@ -66,13 +66,13 @@ export default function RegisterPage() {
             type="submit"
             className="w-full px-4 py-2 bg-blue-500 text-white font-bold rounded-lg hover:bg-blue-600 transition-colors"
           >
-            Register
+            Регистрация
           </button>
         </form>
         <p className="mt-4 text-sm text-gray-600">
-          Already have an account?{" "}
+          Вече инаш акаунт?{" "}
           <Link href="/Login" className="text-blue-500 underline">
-            Login here
+            Влез от тук
           </Link>
         </p>
       </div>

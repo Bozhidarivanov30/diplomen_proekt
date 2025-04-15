@@ -45,7 +45,7 @@ export default function LoginPage() {
         <form onSubmit={handleLogin}>
           <div className="mb-4">
             <label htmlFor="email" className="block text-sm font-bold mb-2">
-              Email
+              Имейл
             </label>
             <input
               type="email"
@@ -58,7 +58,7 @@ export default function LoginPage() {
           </div>
           <div className="mb-6">
             <label htmlFor="password" className="block text-sm font-bold mb-2">
-              Password
+              Парола
             </label>
             <input
               type="password"
@@ -73,13 +73,13 @@ export default function LoginPage() {
             type="submit"
             className="w-full px-4 py-2 bg-blue-500 text-white font-bold rounded-lg hover:bg-blue-600 transition-colors"
           >
-            Login
+            Вход
           </button>
         </form>
         <p className="mt-4 text-sm text-gray-600">
-          Don&apos;t have an account?{" "}
+          Нямаш акаунт{" "}
           <Link href="/Register" className="text-blue-500 underline">
-            Register here
+            Регистрирай се
           </Link>
         </p>
       </div>
