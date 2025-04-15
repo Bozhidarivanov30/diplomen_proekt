@@ -33,10 +33,10 @@ export default function Header() {
         </Link>
         <nav className="text-white text-sm">
           <Link href="/shop" className="px-3 py-2 hover:underline">
-            Shop
+            Магазин
           </Link>
           <Link href="/standings" className="px-3 py-2 hover:underline">
-            Standings
+            Класиране
           </Link>
         </nav>
       </div>
@@ -78,14 +78,14 @@ export default function Header() {
                     onClick={handleLogout}
                     className="w-full text-left px-4 py-2 hover:bg-gray-100"
                   >
-                    Log Out
+                    Излез
                   </button>
                   <Link href="/cart">
                     <button
                       onClick={() => setIsDropdownOpen(false)} // Close dropdown when navigating
                       className="px-4 py-2 hover:bg-gray-100 w-full text-left"
                     >
-                      View Cart
+                      Преглед на количката
                     </button>
                   </Link>
                 </div>

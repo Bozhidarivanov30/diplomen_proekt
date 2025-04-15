@@ -50,7 +50,7 @@ export function LatestNews() {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-4">Latest News</h2>
+      <h2 className="text-2xl font-bold mb-4">Последни новини</h2>
       <ul className="space-y-4">
         {news.length > 0 ? (
           news.map((article) => (

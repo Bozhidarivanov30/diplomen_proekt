@@ -50,7 +50,7 @@ export function UpcomingMatches() {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-4">Upcoming Matches</h2>
+      <h2 className="text-2xl font-bold mb-4">Следващи мачове</h2>
       <ul className="space-y-4">
         {matches.length > 0 ? (
           matches.map((match) => (
@@ -66,11 +66,11 @@ export function UpcomingMatches() {
             </li>
           ))
         ) : (
-          <p>No upcoming matches found.</p>
+          <p>Няма следвщи мачове.</p>
         )}
       </ul>
       <Link href="/standings" className="mt-4 inline-block text-[#004D98] hover:underline">
-        View all matches
+        Виж всички мачове
       </Link>
     </div>
   );

@@ -79,7 +79,7 @@ export default function StandingsPage() {
   const displayedMatches = matches.slice(matchOffset, matchOffset + 3);
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <p>Зареждане...</p>;
   }
 
   if (error) {
@@ -88,21 +88,21 @@ export default function StandingsPage() {
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
-      <h1 className="text-2xl font-bold text-center mb-6">La Liga Standings and Barcelona Matches</h1>
+      <h1 className="text-2xl font-bold text-center mb-6">Ла лига класиране и предишни мачове на Барселона</h1>
       <div className="flex flex-col md:flex-row gap-6">
         {/* Standings Table (Left Side) */}
         <div className="flex-1 bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-xl font-bold mb-4">Current Standings</h2>
+          <h2 className="text-xl font-bold mb-4">Сегашно класиране</h2>
           <table className="w-full">
             <thead>
               <tr className="bg-gray-200">
-                <th className="p-2 text-left">Position</th>
-                <th className="p-2 text-left">Team</th>
-                <th className="p-2 text-left">Played</th>
-                <th className="p-2 text-left">Wins</th>
-                <th className="p-2 text-left">Draws</th>
-                <th className="p-2 text-left">Losses</th>
-                <th className="p-2 text-left">Points</th>
+                <th className="p-2 text-left">Позиция</th>
+                <th className="p-2 text-left">Отбор</th>
+                <th className="p-2 text-left">Изицрани мачове</th>
+                <th className="p-2 text-left">Победи</th>
+                <th className="p-2 text-left">Равенства</th>
+                <th className="p-2 text-left">Загуби</th>
+                <th className="p-2 text-left">Точки</th>
               </tr>
             </thead>
             <tbody>
@@ -123,7 +123,7 @@ export default function StandingsPage() {
 
         {/* Barcelona Matches (Right Side) */}
         <div className="flex-1 bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-xl font-bold mb-4">Barcelona&apos;s Next Matches</h2>
+          <h2 className="text-xl font-bold mb-4">Следващи мачове на Барселона </h2>
           <div className="flex items-center justify-center mb-4">
             <Image
               src="https://upload.wikimedia.org/wikipedia/en/thumb/4/47/FC_Barcelona_%28crest%29.svg/1200px-FC_Barcelona_%28crest%29.svg.png"
@@ -153,14 +153,14 @@ export default function StandingsPage() {
               disabled={matchOffset === 0}
               className="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-300"
             >
-              Previous
+              Предишни
             </button>
             <button
               onClick={handleNextMatches}
               disabled={matchOffset + 3 >= matches.length}
               className="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-300"
             >
-              Next
+              Следващи
             </button>
           </div>
         </div>

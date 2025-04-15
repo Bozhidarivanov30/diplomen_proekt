@@ -21,8 +21,8 @@ export default function Home() {
       <main className="flex-grow">
         <section className="bg-[#A50044] text-white py-20">
           <div className="container mx-auto text-center">
-            <h1 className="text-4xl font-bold mb-4">Welcome to Barça Fan Hub</h1>
-            <p className="text-xl mb-8">Your ultimate destination for all things FC Barcelona</p>
+            <h1 className="text-4xl font-bold mb-4">Здравейте в Barça Fan Hub</h1>
+            <p className="text-xl mb-8">Най доброто място за всички теми свързани с FC Barcelona</p>
 
             {/* Conditionally render the button */}
             {!hasRegistered && (
@@ -31,7 +31,7 @@ export default function Home() {
                 onClick={handleRegister} // Call handleRegister when the button is clicked
                 className="bg-white text-[#A50044] px-6 py-2 rounded-full font-bold hover:bg-opacity-90 transition-colors"
               >
-                Join the Community
+                Присъедини се към клуба
               </Link>
             )}
           </div>

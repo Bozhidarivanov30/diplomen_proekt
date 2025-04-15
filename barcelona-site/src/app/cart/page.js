@@ -78,9 +78,9 @@ export default function CartPage() {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold">Your Cart</h1>
+      <h1 className="text-2xl font-bold">Количката ти е празна</h1>
       {cart.length === 0 ? (
-        <p className="mt-4 text-lg">Your cart is empty.</p>
+        <p className="mt-4 text-lg">Количката ти е празна.</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
           {cart.map((item, index) => (
@@ -98,7 +98,7 @@ export default function CartPage() {
                 onClick={() => handleRemoveFromCart(item)}
                 className="mt-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
               >
-                Remove from Cart
+                Премахжане от количка
               </button>
             </div>
           ))}
@@ -107,12 +107,12 @@ export default function CartPage() {
 
       {/* Display Total Price and Checkout Button */}
       <div className="mt-6">
-        <p className="text-xl font-bold">Total: ${totalPrice.toFixed(2)}</p>
+        <p className="text-xl font-bold">Крайна цена: ${totalPrice.toFixed(2)}</p>
         <button
           onClick={handleCheckout}
           className="px-6 py-3 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition-colors"
         >
-          Go to Checkout
+          Плащане
         </button>
       </div>
     </div>

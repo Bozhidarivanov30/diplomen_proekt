@@ -104,10 +104,13 @@ export default function ShopPage() {
   return (
     <div className="min-h-screen bg-maroon p-6 relative">
       {/* Yellow Stripes */}
-      <div className="absolute top-0 left-0 w-full h-full bg-stripes pointer-events-none"></div>
-
+      <div className="stripes-container">
+        <div className="yellow-stripe yellow-stripe-1"></div>
+        <div className="yellow-stripe yellow-stripe-2"></div>
+        <div className="yellow-stripe yellow-stripe-3"></div>
+      </div>
       {/* Shop Content */}
-      <h1 className="text-2xl font-bold text-white mb-6 relative z-10">Shop</h1>
+      <h1 className="text-2xl font-bold text-white mb-6 relative z-10">Магазин</h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
         {shopItems.map((item) => (
           <div key={item.id} className="bg-white p-4 rounded-lg shadow-lg text-center">
@@ -125,14 +128,14 @@ export default function ShopPage() {
                 onClick={() => handleAddToCart(item)}
                 className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition-colors"
               >
-                Add to Cart
+                Добави в количка
               </button>
               {isAdmin && (
                 <button
                   onClick={() => handleRemoveProduct(item)}
                   className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
                 >
-                  Remove
+                  Премахване
                 </button>
               )}
             </div>
@@ -213,13 +216,13 @@ export default function ShopPage() {
                     onClick={() => setShowAddProductModal(false)}
                     className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
                   >
-                    Cancel
+                    Окажи
                   </button>
                   <button
                     type="submit"
                     className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
                   >
-                    Add Product
+                    Добави продукт
                   </button>
                 </div>
               </form>
