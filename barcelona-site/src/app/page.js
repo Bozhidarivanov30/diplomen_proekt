@@ -25,7 +25,7 @@ export default function Home() {
             <p className="text-xl mb-8">Най-доброто място за всички теми свързани с FC Barcelona</p>
 
             {/* Conditionally render the button */}
-            {!hasRegistered && (
+            {!isLoggedIn&& (
               <Link
                 href="/Register" // Use an absolute path for better reliability
                 onClick={handleRegister} // Call handleRegister when the button is clicked
