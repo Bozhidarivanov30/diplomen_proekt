@@ -98,7 +98,7 @@ export default function StandingsPage() {
               <tr className="bg-gray-200">
                 <th className="p-2 text-left">Позиция</th>
                 <th className="p-2 text-left">Отбор</th>
-                <th className="p-2 text-left">Изицрани мачове</th>
+                <th className="p-2 text-left">Изиграни мачове</th>
                 <th className="p-2 text-left">Победи</th>
                 <th className="p-2 text-left">Равенства</th>
                 <th className="p-2 text-left">Загуби</th>
