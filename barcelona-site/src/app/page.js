@@ -22,7 +22,7 @@ export default function Home() {
         <section className="bg-[#A50044] text-white py-20">
           <div className="container mx-auto text-center">
             <h1 className="text-4xl font-bold mb-4">Здравейте в Barça Fan Hub</h1>
-            <p className="text-xl mb-8">Най доброто място за всички теми свързани с FC Barcelona</p>
+            <p className="text-xl mb-8">Най-доброто място за всички теми свързани с FC Barcelona</p>
 
             {/* Conditionally render the button */}
             {!hasRegistered && (
