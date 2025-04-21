@@ -10,16 +10,13 @@ export default function CartPage() {
   const { user, cart, setCart } = useUser();
   const [stripePromise, setStripePromise] = useState(null);
 
-  // Calculate the total price of items in the cart
   const totalPrice = cart.reduce((total, item) => total + item.price, 0);
 
-  // Load Stripe.js
   useEffect(() => {
     const initializeStripe = async () => {
       const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
       setStripePromise(stripe);
     };
-
     initializeStripe();
   }, []);
 
@@ -44,26 +41,21 @@ export default function CartPage() {
     }
   
     try {
-      // Create a Checkout Session
       const response = await fetch("/api/checkout_api", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          items: cart, // Pass the cart items to the backend
+          items: cart,
         }),
       });
   
-      // Check if the response is OK
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
   
-      // Parse the JSON response
       const { id } = await response.json();
-  
-      // Redirect to Stripe Checkout
       const { error } = await stripePromise.redirectToCheckout({
         sessionId: id,
       });
@@ -77,44 +69,64 @@ export default function CartPage() {
   };
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold">Количката ти е празна</h1>
+    <div className="min-h-screen p-4 md:p-8 bg-gray-50">
+      <h1 className="text-2xl md:text-3xl font-bold mb-8">Вашата количка</h1>
+      
       {cart.length === 0 ? (
-        <p className="mt-4 text-lg">Количката ти е празна.</p>
+        <div className="bg-white p-8 rounded-lg shadow-lg text-center max-w-2xl mx-auto">
+          <p className="text-xl md:text-2xl">Количката ви е празна.</p>
+        </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-          {cart.map((item, index) => (
-            <div key={index} className="border p-2 rounded shadow">
-              <h2 className="text-lg font-bold">{item.name}</h2>
-              <Image
-                src={item.imgScr}
-                alt={item.name}
-                width={80}
-                height={80}
-                className="w-full h-auto mb-4"
-              />
-              <p>${item.price}</p>
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            {cart.map((item) => (
+              <div key={item.id} className="bg-white p-6 rounded-xl shadow-lg flex flex-col h-full transition-transform hover:scale-[1.02]">
+                {/* Product name above image */}
+                <h2 className="text-xl md:text-2xl font-bold mb-4">{item.name}</h2>
+                
+                {/* Image container with original sizing */}
+                <div className="relative w-full h-64 md:h-80 mb-6">
+                  <Image
+                    src={item.imgScr}
+                    alt={item.name}
+                    fill
+                    className="object-contain"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    priority
+                  />
+                </div>
+                
+                <div className="flex-grow">
+                  <p className="text-lg md:text-xl text-gray-700 mb-6">${item.price.toFixed(2)}</p>
+                </div>
+                
+                <button
+                  onClick={() => handleRemoveFromCart(item)}
+                  className="mt-auto px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors w-full text-lg"
+                >
+                  Премахване
+                </button>
+              </div>
+            ))}
+          </div>
+
+          {/* Checkout section */}
+          <div className="mt-10 bg-white p-6 md:p-8 rounded-xl shadow-lg max-w-4xl mx-auto">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+              <p className="text-2xl md:text-3xl font-bold">
+                Обща сума: <span className="text-blue-600">${totalPrice.toFixed(2)}</span>
+              </p>
               <button
-                onClick={() => handleRemoveFromCart(item)}
-                className="mt-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
+                onClick={handleCheckout}
+                disabled={!stripePromise}
+                className="px-8 py-4 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg text-xl font-bold transition-colors disabled:bg-gray-400 w-full md:w-auto"
               >
-                Премахжане от количка
+                Продължи към плащане →
               </button>
             </div>
-          ))}
-        </div>
+          </div>
+        </>
       )}
-
-      {/* Display Total Price and Checkout Button */}
-      <div className="mt-6">
-        <p className="text-xl font-bold">Крайна цена: ${totalPrice.toFixed(2)}</p>
-        <button
-          onClick={handleCheckout}
-          className="px-6 py-3 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition-colors"
-        >
-          Плащане
-        </button>
-      </div>
     </div>
   );
 }

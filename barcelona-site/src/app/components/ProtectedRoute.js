@@ -11,7 +11,7 @@ export default function ProtectedRoute({ children }) {
     const auth = getAuth();
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (!user) {
-        router.push('/login'); // Redirect to login if not authenticated
+        router.push('/login'); 
       }
     });
     return unsubscribe;

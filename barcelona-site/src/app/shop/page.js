@@ -110,7 +110,9 @@ export default function ShopPage() {
         <div className="yellow-stripe yellow-stripe-3"></div>
       </div>
       {/* Shop Content */}
-      <h1 className="text-2xl font-bold text-white mb-6 relative z-10">Магазин</h1>
+      <h1 className="text-2xl font-bold text-white mb-6 relative z-10 [text-shadow:_1px_1px_1px_rgb(0_0_0_/_100%)]">
+        Магазин
+      </h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
         {shopItems.map((item) => (
           <div key={item.id} className="bg-white p-4 rounded-lg shadow-lg text-center">
