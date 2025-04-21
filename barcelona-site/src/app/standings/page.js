@@ -88,7 +88,6 @@ export default function StandingsPage() {
       </h1>
       
       <div className="flex flex-col lg:flex-row gap-6">
-        {/* Standings Table - 50% width on desktop */}
         <div className="bg-white p-4 md:p-6 rounded-lg shadow-md lg:w-1/2">
           <h2 className="text-lg md:text-xl font-bold mb-4">Сегашно класиране</h2>
           <div className="overflow-x-auto">
@@ -113,7 +112,7 @@ export default function StandingsPage() {
                     <td className="p-2">{team.won}</td>
                     <td className="p-2">{team.draw}</td>
                     <td className="p-2">{team.lost}</td>
-                    <td className="p-2 ">{team.points}</td>
+                    <td className="p-2 font-bold">{team.points}</td>
                   </tr>
                 ))}
               </tbody>
@@ -121,7 +120,6 @@ export default function StandingsPage() {
           </div>
         </div>
 
-        {/* Barcelona Matches - 50% width on desktop */}
         <div className="bg-white p-4 md:p-6 rounded-lg shadow-md lg:w-1/2">
           <h2 className="text-lg md:text-xl font-bold mb-4">
             Следващи мачове на Барселона

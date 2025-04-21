@@ -81,10 +81,6 @@ export default function CartPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {cart.map((item) => (
               <div key={item.id} className="bg-white p-6 rounded-xl shadow-lg flex flex-col h-full transition-transform hover:scale-[1.02]">
-                {/* Product name above image */}
-                <h2 className="text-xl md:text-2xl font-bold mb-4">{item.name}</h2>
-                
-                {/* Image container with original sizing */}
                 <div className="relative w-full h-64 md:h-80 mb-6">
                   <Image
                     src={item.imgScr}
@@ -97,6 +93,7 @@ export default function CartPage() {
                 </div>
                 
                 <div className="flex-grow">
+                  <h2 className="text-xl md:text-2xl font-bold mb-3">{item.name}</h2>
                   <p className="text-lg md:text-xl text-gray-700 mb-6">${item.price.toFixed(2)}</p>
                 </div>
                 
@@ -110,7 +107,6 @@ export default function CartPage() {
             ))}
           </div>
 
-          {/* Checkout section */}
           <div className="mt-10 bg-white p-6 md:p-8 rounded-xl shadow-lg max-w-4xl mx-auto">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
               <p className="text-2xl md:text-3xl font-bold">
