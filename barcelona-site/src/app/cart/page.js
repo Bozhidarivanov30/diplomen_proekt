@@ -74,7 +74,7 @@ export default function CartPage() {
       
       {cart.length === 0 ? (
         <div className="bg-white p-8 rounded-lg shadow-lg text-center max-w-2xl mx-auto">
-          <p className="text-xl md:text-2xl">Количката ви е празна.</p>
+          <p className="text-xl md:text-2xl">Количката е празна.</p>
         </div>
       ) : (
         <>
