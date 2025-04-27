@@ -1,22 +1,28 @@
 "use client"; // Add this directive to use client-side features like useState
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { UpcomingMatches } from "./components/upcoming-matches";
 import { LatestNews } from "./components/latest-news";
-import { getAuth } from "firebase/auth";
-import { app } from "./firebase.js"; 
 
 export default function Home() {
-  // State to track if the user has registered
-  const [hasRegistered, setHasRegistered] = useState(false);
+  // State to track if the user is logged in
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // State to track if authentication check is complete
+  const [authChecked, setAuthChecked] = useState(false);
 
-  // Function to handle registration
-  const handleRegister = () => {
-    // Simulate registration logic (e.g., API call)
-    // After successful registration, set hasRegistered to true
-    setHasRegistered(true);
-  };
+  // Check Firebase authentication status
+  useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setIsLoggedIn(!!user);
+      setAuthChecked(true);
+    });
+
+    // Clean up subscription
+    return () => unsubscribe();
+  }, []);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -24,13 +30,12 @@ export default function Home() {
         <section className="bg-[#A50044] text-white py-20">
           <div className="container mx-auto text-center">
             <h1 className="text-4xl font-bold mb-4">Здравейте в Barça Fan Hub</h1>
-            <p className="text-xl mb-8">Най доброто място за всички теми свързани с FC Barcelona</p>
+            <p className="text-xl mb-8">Най-доброто място за всички теми свързани с FC Barcelona</p>
 
-            {/* Conditionally render the button */}
-            {!hasRegistered && (
+            {/* Показваме бутона само ако потребителят НЕ е логнат и сме проверили автентикацията */}
+            {authChecked && !isLoggedIn && (
               <Link
-                href="/Register" // Use an absolute path for better reliability
-                onClick={handleRegister} // Call handleRegister when the button is clicked
+                href="/Register"
                 className="bg-white text-[#A50044] px-6 py-2 rounded-full font-bold hover:bg-opacity-90 transition-colors"
               >
                 Присъедини се към клуба
@@ -49,15 +54,13 @@ export default function Home() {
 
       <footer className="bg-[#004D98] text-white py-8">
         <div className="container mx-auto text-center">
-          <p className="text-sm sm:text-base">
-            &copy; {new Date().getFullYear()} Barça Fan Hub. All rights reserved.
-          </p>
-          <div className="mt-3 sm:mt-4 flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-4">
-            <Link href="/privacy" className="hover:underline text-sm sm:text-base">
-            Политика за поверителност
+          <p>&copy; {new Date().getFullYear()} Barça Fan Hub. All rights reserved.</p>
+          <div className="mt-4">
+            <Link href="/privacy" className="hover:underline mr-4">
+              Privacy Policy
             </Link>
-            <Link href="/terms" className="hover:underline text-sm sm:text-base">
-              Условия за ползване
+            <Link href="/terms" className="hover:underline">
+              Terms of Service
             </Link>
           </div>
         </div>
