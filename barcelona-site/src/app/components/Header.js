@@ -146,13 +146,7 @@ export default function Header() {
             
             {user ? (
               <>
-                <Link
-                  href="/profile"
-                  className="text-blue-200 py-3 hover:bg-blue-700 rounded px-3"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Профил
-                </Link>
+                
                 <Link
                   href="/cart"
                   className="text-blue-200 py-3 hover:bg-blue-700 rounded px-3"
