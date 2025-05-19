@@ -1,6 +1,6 @@
 export async function GET() {
     const API_URL = "https://newsapi.org/v2/everything?q=fcbarcelona&sortBy=publishedAt";
-    const API_KEY = "1a9affa9363541a89be79336c12a99f5"; // Your actual API key
+    const API_KEY = "1a9affa9363541a89be79336c12a99f5"; 
   
     try {
       const response = await fetch(`${API_URL}&apiKey=${API_KEY}`);

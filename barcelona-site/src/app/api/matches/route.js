@@ -1,6 +1,6 @@
 export async function GET() {
     const API_URL = "http://api.football-data.org/v4/teams/81/matches";
-    const API_KEY = "ccd1ed853c494c27813971cc236d4022"; // Your actual API key
+    const API_KEY = "ccd1ed853c494c27813971cc236d4022"; 
   
     try {
       const response = await fetch(API_URL, {

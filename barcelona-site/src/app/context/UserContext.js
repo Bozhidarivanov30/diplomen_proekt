@@ -12,6 +12,7 @@ import {
 import { useRouter } from "next/navigation";
 import { doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 import { db } from "../firebase";
+import { createUserInFirestore } from "../firebase"; 
 
 const UserContext = createContext();
 
@@ -77,24 +78,29 @@ export function UserContextProvider({ children }) {
     }
   };
 
-  // Register user
   const registerUser = async (email, password) => {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const userId = userCredential.user.uid;
-
+      const user = userCredential.user;
+      const userId = user.uid;
+  
+      // 🔥 Създай запис за потребителя в Firestore ("users" колекция)
+      await createUserInFirestore(user);
+  
+      // 🔄 Създай празна количка
       const userCartRef = doc(db, "carts", userId);
-      await setDoc(userCartRef, { items: [] }); // Initialize empty cart
-
-      setUser(userCredential.user); // Set the full user object
-      setCart([]); // Initialize empty cart state
-      alert("Registration successful and cart initialized!");
-      router.push("/"); // Redirect to home page
+      await setDoc(userCartRef, { items: [] });
+  
+      setUser(user); // Запиши потребителя в стейта
+      setCart([]);   // Започни с празна количка
+      alert("Registration successful!");
+      router.push("/"); // Пренасочване към начална страница
     } catch (error) {
       console.error("Registration failed:", error.message);
       alert(`Registration failed: ${error.message}`);
     }
   };
+  
 
   // Logout user
   const logoutUser = async () => {
@@ -143,6 +149,7 @@ export function UserContextProvider({ children }) {
       alert(`Error adding to cart: ${error.message}`);
     }
   };
+  
 
   // Remove item from cart
   const removeFromCart = async (item) => {

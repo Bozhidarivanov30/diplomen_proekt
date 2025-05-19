@@ -111,3 +111,17 @@ export async function getProducts() {
   }));
   return products;
 }
+export async function createUserInFirestore(user) {
+  try {
+    const userRef = doc(db, "users", user.uid);
+    await setDoc(userRef, {
+      uid: user.uid,
+      email: user.email,
+      role: "user", // Може да се използва по-късно за админ система
+      createdAt: new Date().toISOString(),
+    });
+    console.log("User added to Firestore users collection.");
+  } catch (error) {
+    console.error("Error adding user to Firestore:", error.message);
+  }
+}
