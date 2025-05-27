@@ -14,21 +14,7 @@ export default function LoginPage() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
-    // Check if the email and password match the admin credentials
-    if (email === "admin1@gmail.com" && password === "admin123") {
-      // Redirect to the admin page
-      router.push("/admin");
-      return;
-    }
-
-    // Proceed with regular user login
-    try {
-      await loginUser(email, password);
-      router.push("/"); // Redirect to the home page after successful login
-    } catch (error) {
-      alert("Login failed. Please check your email and password.");
-    }
+    await loginUser(email, password); // loginUser will handle redirection (admin or regular)
   };
 
   return (
@@ -50,7 +36,7 @@ export default function LoginPage() {
             <input
               type="email"
               id="email"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter email"
@@ -63,7 +49,7 @@ export default function LoginPage() {
             <input
               type="password"
               id="password"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter password"
@@ -71,7 +57,7 @@ export default function LoginPage() {
           </div>
           <button
             type="submit"
-            className="w-full px-4 py-2 bg-blue-500 text-white font-bold rounded-lg hover:bg-blue-600 transition-colors"
+            className="w-full px-4 py-2 bg-blue-500 text-white font-bold rounded-lg hover:bg-blue-600"
           >
             Вход
           </button>

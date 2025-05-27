@@ -12,10 +12,10 @@
   "dependencies": {
     "@stripe/stripe-js": "^6.0.0",
     "firebase": "^11.0.2",
-    "next": "15.0.3",
+    "next": "^15.0.3",
     "node-fetch": "^3.3.2",
-    "react": "19.0.0-rc-66855b96-20241106",
-    "react-dom": "19.0.0-rc-66855b96-20241106",
+    "react": "^19.0.0-rc-66855b96-20241106",
+    "react-dom": "^19.0.0-rc-66855b96-20241106",
     "stripe": "^17.7.0",
     "tailwindcss-animate": "^1.0.7"
   },
