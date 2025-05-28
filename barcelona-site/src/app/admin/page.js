@@ -46,34 +46,32 @@ export default function AdminPage() {
     }
   };
 
-  const handleAddProduct = async (e) => {
-    e.preventDefault();
-    try {
-      await addProduct({ name, price: parseFloat(price), imgScr });
-      alert("Product added successfully!");
-      setName("");
-      setPrice("");
-      setImgScr("");
-      fetchProducts();
-    } catch (error) {
-      console.error("Failed to add product:", error);
-      alert("Failed to add product. Please try again.");
-    }
-  };
+ const handleAddProduct = async (e) => {
+  e.preventDefault();
+  try {
+    const newProduct = { 
+      name, 
+      price: parseFloat(price), 
+      imgScr 
+    };
+    const addedProduct = await addProduct(newProduct); // Now includes `id`
+    setProducts(prev => [...prev, addedProduct]); // Update state
+    setName("");
+    setPrice("");
+    setImgScr("");
+  } catch (error) {
+    alert("Failed to add product: " + error.message);
+  }
+};
 
-  const handleDeleteProduct = async (productId) => {
-    if (!window.confirm("Are you sure you want to delete this product?")) return;
-    
-    try {
-      await deleteProduct(productId);
-      alert("Product deleted successfully!");
-      fetchProducts();
-    } catch (error) {
-      console.error("Failed to delete product:", error);
-      alert("Failed to delete product. Please try again.");
-    }
-  };
-
+const handleDeleteProduct = async (productId) => {
+  try {
+    await deleteProduct(productId);
+    setProducts(prev => prev.filter(p => p.id !== productId)); // Remove by ID
+  } catch (error) {
+    alert("Failed to delete: " + error.message);
+  }
+};
   const handleToggleAdmin = async (userId, currentStatus) => {
     if (!window.confirm(`Are you sure you want to ${currentStatus ? "remove" : "grant"} admin privileges?`)) return;
     

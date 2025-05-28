@@ -82,21 +82,26 @@ export async function updateCartItem(userId, oldItem, newItem) {
   });
 }
 
-export const addProduct = async (product) => {
+export const addProduct = async (product) => {  
   const docRef = await addDoc(collection(db, "products"), product);
-  return docRef.id;
+  return {
+    id: docRef.id,  // ← Firestore auto-generated ID
+    ...product      // ← Existing fields (imgScr, name, price)
+  };
 };
 
-export const deleteProduct = async (productId) => {
-  await deleteDoc(doc(db, "products", productId));
-};
-
+// Get Products (include doc.id in response)
 export const getProducts = async () => {
-  const productsSnapshot = await getDocs(collection(db, "products"));
-  return productsSnapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
+  const snapshot = await getDocs(collection(db, "products"));
+  return snapshot.docs.map((doc) => ({
+    id: doc.id,     // ← Auto-generated ID
+    ...doc.data()   // ← imgScr, name, price
   }));
+};
+
+// Delete Product (uses doc.id)
+export const deleteProduct = async (productId) => {
+  await deleteDoc(doc(db, "products", productId)); // Uses Firestore ID
 };
 
 // Admin functions
