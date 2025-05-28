@@ -1,6 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithEmailAndPassword} from "firebase/auth";
-
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import {
   getFirestore,
   doc,
@@ -11,9 +10,10 @@ import {
   arrayRemove,
   collection,
   getDocs,
+  addDoc,
+  deleteDoc,
 } from "firebase/firestore";
 
-// Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyDz8376AFk-ADLFYHzjUASfNU1oOqtV9tI",
   authDomain: "fanshop-7915c.firebaseapp.com",
@@ -23,103 +23,99 @@ const firebaseConfig = {
   appId: "1:803992597977:web:904ecce17ca84169b755c8",
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 
-// Remove an item from the cart in Firestore
 export async function removeFromCart(userId, item) {
-  if (!userId) {
-    console.error("User ID is undefined.");
-    return;
-  }
-
+  if (!userId) return;
   const userCartRef = doc(db, "carts", userId);
-  await updateDoc(userCartRef, {
-    items: arrayRemove(item),
-  });
+  await updateDoc(userCartRef, { items: arrayRemove(item) });
 }
 
-// Get the cart for the user
 export async function getCart(userId) {
-  if (!userId) {
-    console.error("User ID is undefined.");
-    return [];
-  }
-
+  if (!userId) return [];
   const userCartRef = doc(db, "carts", userId);
   const cartDoc = await getDoc(userCartRef);
   return cartDoc.exists() ? cartDoc.data().items : [];
 }
 
-// Add an item to the cart in Firestore
 export async function addToCart(userId, item) {
-  if (!userId) {
-    console.error("User ID is undefined.");
-    return;
+  if (!userId) return;
+  const cartRef = doc(db, "carts", userId);
+  const cartDoc = await getDoc(cartRef);
+  
+  if (!cartDoc.exists()) {
+    await setDoc(cartRef, { items: [] });
   }
-
-  try {
-    const cartRef = doc(db, "carts", userId);
-
-    // Check if the document exists
-    const cartDoc = await getDoc(cartRef);
-    if (!cartDoc.exists()) {
-      // Create a new document if it doesn't exist
-      await setDoc(cartRef, { items: [] });
-    }
-
-    await updateDoc(cartRef, {
-      items: arrayUnion(item),
+  
+  const currentItems = cartDoc.exists() ? cartDoc.data().items || [] : [];
+  const existingItemIndex = currentItems.findIndex(i => i.id === item.id);
+  
+  if (existingItemIndex >= 0) {
+    const updatedItems = [...currentItems];
+    updatedItems[existingItemIndex].quantity = 
+      (updatedItems[existingItemIndex].quantity || 1) + (item.quantity || 1);
+    await updateDoc(cartRef, { items: updatedItems });
+  } else {
+    await updateDoc(cartRef, { 
+      items: arrayUnion({
+        ...item,
+        quantity: item.quantity || 1
+      }) 
     });
-  } catch (error) {
-    console.error("Error adding to cart:", error.message);
-    throw error;
   }
 }
 
-// Add a new product
+export async function updateCartItem(userId, oldItem, newItem) {
+  if (!userId) return;
+  const cartRef = doc(db, "carts", userId);
+  
+  await updateDoc(cartRef, {
+    items: arrayRemove(oldItem)
+  });
+  
+  await updateDoc(cartRef, {
+    items: arrayUnion(newItem)
+  });
+}
+
 export const addProduct = async (product) => {
   const docRef = await addDoc(collection(db, "products"), product);
   return docRef.id;
 };
-// Delete a product
+
 export const deleteProduct = async (productId) => {
-  await deleteDoc(doc(db, "products", productId)); // Use deleteDoc to remove a product
+  await deleteDoc(doc(db, "products", productId));
 };
 
-
-// Admin login
-export const adminLogin = async (email, password) => {
-  try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    return userCredential.user;
-  } catch (error) {
-    console.error("Admin login error:", error.message);
-    throw error;
-  }
-};
-
-// Fetch all products from the "products" collection
-export async function getProducts() {
-  const productsCollection = collection(db, "products");
-  const productsSnapshot = await getDocs(productsCollection);
-  const products = productsSnapshot.docs.map((doc) => ({
-    id: doc.id, // Include the document ID
-    ...doc.data(), // Include all fields from the document
+export const getProducts = async () => {
+  const productsSnapshot = await getDocs(collection(db, "products"));
+  return productsSnapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
   }));
-  return products;
-}
+};
+
+export const adminLogin = async (email, password) => {
+  const userCredential = await signInWithEmailAndPassword(auth, email, password);
+  return userCredential.user;
+};
+
 export async function createUserInFirestore(user) {
   try {
     const userRef = doc(db, "users", user.uid);
+    const adminEmails = ["admin1@gmail.com"];
+    const isAdmin = adminEmails.includes(user.email);
+
     await setDoc(userRef, {
       uid: user.uid,
       email: user.email,
-      role: "user", // Може да се използва по-късно за админ система
+      role: isAdmin ? "admin" : "user",
+      isAdmin: isAdmin,
       createdAt: new Date().toISOString(),
     });
+
     console.log("User added to Firestore users collection.");
   } catch (error) {
     console.error("Error adding user to Firestore:", error.message);

@@ -1,7 +1,7 @@
 "use client";
 
 import { useUser } from "../context/UserContext";
-import { removeFromCart } from "../firebase";
+import { removeFromCart, updateCartItem } from "../firebase";
 import Image from "next/image";
 import { loadStripe } from "@stripe/stripe-js";
 import { useEffect, useState } from "react";
@@ -10,7 +10,7 @@ export default function CartPage() {
   const { user, cart, setCart } = useUser();
   const [stripePromise, setStripePromise] = useState(null);
 
-  const totalPrice = cart.reduce((total, item) => total + item.price, 0);
+  const totalPrice = cart.reduce((total, item) => total + (item.price * (item.quantity || 1)), 0);
 
   useEffect(() => {
     const initializeStripe = async () => {
@@ -34,6 +34,31 @@ export default function CartPage() {
     }
   };
 
+  const updateCartItemQuantity = async (item, newQuantity) => {
+    if (!user?.uid) {
+      alert("You need to be logged in to update your cart.");
+      return;
+    }
+    try {
+      if (newQuantity < 1) {
+        await handleRemoveFromCart(item);
+        return;
+      }
+
+      const updatedItem = { ...item, quantity: newQuantity };
+      await updateCartItem(user.uid, item, updatedItem);
+      
+      setCart((prev) => 
+        prev.map(cartItem => 
+          cartItem.id === item.id ? updatedItem : cartItem
+        )
+      );
+    } catch (error) {
+      console.error("Error updating cart item quantity:", error.message);
+      alert(`Error updating quantity: ${error.message}`);
+    }
+  };
+
   const handleCheckout = async () => {
     if (cart.length === 0) {
       alert("Your cart is empty. Add items to proceed to checkout.");
@@ -47,7 +72,11 @@ export default function CartPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          items: cart,
+          items: cart.map(item => ({
+            ...item,
+            price: Math.round(item.price * 100), // Convert to cents
+            quantity: item.quantity || 1
+          })),
         }),
       });
   
@@ -94,7 +123,24 @@ export default function CartPage() {
                 
                 <div className="flex-grow">
                   <h2 className="text-xl md:text-2xl font-bold mb-3">{item.name}</h2>
-                  <p className="text-lg md:text-xl text-gray-700 mb-6">${item.price.toFixed(2)}</p>
+                  <p className="text-lg md:text-xl text-gray-700 mb-2">
+                    ${item.price.toFixed(2)} × {item.quantity || 1} = ${(item.price * (item.quantity || 1)).toFixed(2)}
+                  </p>
+                  <div className="flex items-center space-x-4 mb-6">
+                    <button
+                      onClick={() => updateCartItemQuantity(item, (item.quantity || 1) - 1)}
+                      className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
+                    >
+                      -
+                    </button>
+                    <span className="text-lg">{item.quantity || 1}</span>
+                    <button
+                      onClick={() => updateCartItemQuantity(item, (item.quantity || 1) + 1)}
+                      className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
+                    >
+                      +
+                    </button>
+                  </div>
                 </div>
                 
                 <button

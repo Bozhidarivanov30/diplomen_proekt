@@ -1,7 +1,7 @@
-// app/api/standings/route.js
+
 export async function GET() {
     const API_URL = "http://api.football-data.org/v4/competitions/PD/standings";
-    const API_KEY = "ccd1ed853c494c27813971cc236d4022"; // Replace with your API key
+    const API_KEY = "ccd1ed853c494c27813971cc236d4022"; 
   
     try {
       const response = await fetch(API_URL, {

@@ -1,4 +1,4 @@
-"use client"; // Add this directive to use client-side features like useState
+"use client"; 
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
