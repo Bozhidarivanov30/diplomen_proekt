@@ -18,6 +18,8 @@ const UserContext = createContext();
 export function UserContextProvider({ children }) {
   const [user, setUser] = useState(null);
   const [cart, setCart] = useState([]);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
@@ -30,11 +32,13 @@ export function UserContextProvider({ children }) {
         let userData = {};
         if (userDocSnap.exists()) {
           userData = userDocSnap.data();
+          setIsAdmin(userData.isAdmin || false);
         }
 
         const mergedUser = {
           uid: currentUser.uid,
           email: currentUser.email,
+          isAdmin: userData.isAdmin || false,
           ...userData,
         };
 
@@ -45,8 +49,10 @@ export function UserContextProvider({ children }) {
         setCart(cartSnapshot.exists() ? cartSnapshot.data().items || [] : []);
       } else {
         setUser(null);
+        setIsAdmin(false);
         setCart([]);
       }
+      setLoading(false);
     });
 
     return () => unsubscribe();
@@ -56,6 +62,13 @@ export function UserContextProvider({ children }) {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const userId = userCredential.user.uid;
+
+      const userDocRef = doc(db, "users", userId);
+      const userDocSnap = await getDoc(userDocRef);
+      
+      if (userDocSnap.exists()) {
+        setIsAdmin(userDocSnap.data().isAdmin || false);
+      }
 
       const userCartRef = doc(db, "carts", userId);
       const cartSnapshot = await getDoc(userCartRef);
@@ -79,6 +92,7 @@ export function UserContextProvider({ children }) {
       await setDoc(doc(db, "carts", userId), { items: [] });
 
       setUser(user);
+      setIsAdmin(false); // New users are not admins by default
       setCart([]);
       alert("Registration successful!");
       router.push("/");
@@ -92,6 +106,7 @@ export function UserContextProvider({ children }) {
     try {
       await signOut(auth);
       setUser(null);
+      setIsAdmin(false);
       setCart([]);
       alert("Logged out successfully!");
     } catch (error) {
@@ -99,7 +114,6 @@ export function UserContextProvider({ children }) {
       alert(`Logout failed: ${error.message}`);
     }
   };
-
   const addToCart = async (product, quantity = 1) => {
     if (!user) {
       alert("Please log in to add items to your cart.");
@@ -152,11 +166,13 @@ export function UserContextProvider({ children }) {
     }
   };
 
-  return (
+    return (
     <UserContext.Provider
       value={{
         user,
         cart,
+        isAdmin,
+        loading,
         setCart,
         loginUser,
         registerUser,

@@ -12,6 +12,8 @@ import {
   getDocs,
   addDoc,
   deleteDoc,
+  query,
+  where,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -97,27 +99,42 @@ export const getProducts = async () => {
   }));
 };
 
-export const adminLogin = async (email, password) => {
-  const userCredential = await signInWithEmailAndPassword(auth, email, password);
-  return userCredential.user;
+// Admin functions
+export const checkAdminStatus = async (userId) => {
+  const userDoc = await getDoc(doc(db, "users", userId));
+  return userDoc.exists() && userDoc.data().isAdmin === true;
 };
 
+export const setAdminStatus = async (userId, isAdmin) => {
+  await setDoc(doc(db, "users", userId), { isAdmin }, { merge: true });
+};
+
+export const getUsers = async () => {
+  const usersSnapshot = await getDocs(collection(db, "users"));
+  return usersSnapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+};
+
+// User functions
 export async function createUserInFirestore(user) {
   try {
     const userRef = doc(db, "users", user.uid);
-    const adminEmails = ["admin1@gmail.com"];
+    const adminEmails = ["admin1@gmail.com"]; // Add your admin emails here
     const isAdmin = adminEmails.includes(user.email);
 
     await setDoc(userRef, {
       uid: user.uid,
       email: user.email,
-      role: isAdmin ? "admin" : "user",
       isAdmin: isAdmin,
       createdAt: new Date().toISOString(),
     });
 
     console.log("User added to Firestore users collection.");
+    return isAdmin;
   } catch (error) {
     console.error("Error adding user to Firestore:", error.message);
+    return false;
   }
 }

@@ -9,21 +9,21 @@ export default function RegisterPage() {
   const { registerUser } = useUser();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(null); // Add error state
+  const [error, setError] = useState(null);
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    setError(null);
     try {
       await registerUser(email, password);
     } catch (error) {
-      setError(error.message); // Set error message if registration fails
+      setError(error.message);
     }
   };
 
   return (
     <div className="min-h-screen flex justify-center items-center bg-gradient-to-r from-maroon to-yellow">
       <div className="border-4 border-red-500 text-center p-8 bg-white rounded-lg shadow-lg w-full max-w-md">
-        {/* Replace <img> with <Image /> */}
         <Image
           src="https://upload.wikimedia.org/wikipedia/en/thumb/4/47/FC_Barcelona_%28crest%29.svg/1200px-FC_Barcelona_%28crest%29.svg.png"
           alt="Barcelona Logo"
@@ -32,7 +32,7 @@ export default function RegisterPage() {
           className="mx-auto mb-4"
         />
         <h2 className="text-2xl font-bold text-black mb-6">Register</h2>
-        {error && <p className="text-red-500 mb-4">{error}</p>} {/* Display error message */}
+        {error && <p className="text-red-500 mb-4">{error}</p>}
         <form onSubmit={handleRegister}>
           <div className="mb-4">
             <label htmlFor="email" className="block text-sm font-bold mb-2">
@@ -60,6 +60,7 @@ export default function RegisterPage() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter password"
               required
+              minLength="6"
             />
           </div>
           <button

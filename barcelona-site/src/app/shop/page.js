@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useUser } from "../context/UserContext";
 import { addToCart, getCart, getProducts } from "../firebase";
-import { doc, deleteDoc } from "firebase/firestore";
+import {  doc, deleteDoc, addDoc, collection} from "firebase/firestore";
 import { db } from "../firebase";
 import Image from "next/image";
 
