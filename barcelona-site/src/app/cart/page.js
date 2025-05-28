@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 export default function CartPage() {
   const { user, cart, setCart } = useUser();
   const [stripePromise, setStripePromise] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const totalPrice = cart.reduce((total, item) => total + (item.price * (item.quantity || 1)), 0);
 
@@ -65,6 +66,7 @@ export default function CartPage() {
       return;
     }
   
+    setLoading(true);
     try {
       const response = await fetch("/api/checkout_api", {
         method: "POST",
@@ -73,10 +75,13 @@ export default function CartPage() {
         },
         body: JSON.stringify({
           items: cart.map(item => ({
-            ...item,
+            id: item.id,
+            name: item.name,
             price: Math.round(item.price * 100), // Convert to cents
-            quantity: item.quantity || 1
+            quantity: item.quantity || 1,
+            imgScr: item.imgScr
           })),
+          userId: user?.uid || null
         }),
       });
   
@@ -91,19 +96,23 @@ export default function CartPage() {
   
       if (error) {
         console.error("Checkout error:", error);
+        alert("Checkout failed. Please try again.");
       }
     } catch (error) {
       console.error("Failed to create checkout session:", error);
+      alert("Failed to process checkout. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen p-4 md:p-8 bg-gray-50">
-      <h1 className="text-2xl md:text-3xl font-bold mb-8">Вашата количка</h1>
+      <h1 className="text-2xl md:text-3xl font-bold mb-8">Your Cart</h1>
       
       {cart.length === 0 ? (
         <div className="bg-white p-8 rounded-lg shadow-lg text-center max-w-2xl mx-auto">
-          <p className="text-xl md:text-2xl">Количката е празна.</p>
+          <p className="text-xl md:text-2xl">Your cart is empty.</p>
         </div>
       ) : (
         <>
@@ -147,7 +156,7 @@ export default function CartPage() {
                   onClick={() => handleRemoveFromCart(item)}
                   className="mt-auto px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors w-full text-lg"
                 >
-                  Премахване
+                  Remove
                 </button>
               </div>
             ))}
@@ -156,14 +165,14 @@ export default function CartPage() {
           <div className="mt-10 bg-white p-6 md:p-8 rounded-xl shadow-lg max-w-4xl mx-auto">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
               <p className="text-2xl md:text-3xl font-bold">
-                Обща сума: <span className="text-blue-600">${totalPrice.toFixed(2)}</span>
+                Total: <span className="text-blue-600">${totalPrice.toFixed(2)}</span>
               </p>
               <button
                 onClick={handleCheckout}
-                disabled={!stripePromise}
+                disabled={!stripePromise || loading}
                 className="px-8 py-4 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg text-xl font-bold transition-colors disabled:bg-gray-400 w-full md:w-auto"
               >
-                Продължи към плащане →
+                {loading ? "Processing..." : "Proceed to Checkout →"}
               </button>
             </div>
           </div>
